@@ -1,7 +1,0 @@
-group is
-  $/basis.cm
-  ../lib/sources.cm
-
-  game.sig
-
-  estimate-ordered.sml

@@ -1,6 +1,0 @@
-Group is
-   $/basis.cm
-
-   arithmetic.sig
-   Decimal.sml
-   Binary.sml
