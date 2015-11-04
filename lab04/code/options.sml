@@ -24,14 +24,29 @@ val SOME 0 = indexAt(0, [0,1,2,3])
 
 
 (* Insert documentation here *)
-fun checkAndGet _ = raise Fail "unimplemented"
+fun checkAndGet (i: int, nil: int list): int list option = NONE
+  | checkAndGet (i, x::xs) =
+    case i=x of
+         true=>SOME xs
+       | false=>case checkAndGet(i,xs) of
+                     NONE=>NONE
+                   | SOME ls=>SOME (x::ls)
 
 (* insert test cases here *)
-
+val NONE = checkAndGet(1,[2,3])
+val SOME ([2,3]) = checkAndGet(1,[2,1,3])
 
 (* Insert documentation here*)
-fun isPermutation2 _ = raise Fail "unimplemented"
+fun isPermutation2 (l1: int list, l2: int list): bool = 
+  case l1 of
+       []=>l2=[]
+     | x::xs=>
+         case checkAndGet(x, l2) of
+              NONE=>false
+            | SOME(l3)=>isPermutation2(xs,l3)
 
 (* insert test cases here *)
-
-
+val true = isPermutation2([],[])
+val true = isPermutation2([1,2],[2,1])
+val false = isPermutation2([1,2],[])
+val false = isPermutation2([1,2],[3,2])
