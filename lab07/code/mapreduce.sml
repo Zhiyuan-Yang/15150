@@ -16,6 +16,12 @@ fun reduce (g: 'a * 'b * 'a -> 'a) (e: 'a) (Empty: 'b tree): 'a = e
   | reduce g e (Node(tL,x,tR)) = g (reduce g e tL, x, reduce g e tR)
 
 
-fun mapreduce _ _ _ _ = raise Fail "Unimplemented"
+fun mapreduce (f:'a->'b) (g: 'c*'b*'c->'c) (e: 'c) (Empty: 'a tree): 'c = e
+  | mapreduce f g e (Node(tl, x, tr)) = g(mapreduce f g e tl, f x, mapreduce f g e tr)
 
-val totalLength = fn x => raise Fail "Unimplemented"
+val t = Node(Node(Empty, 1, Empty), 2, Node(Empty, 3, Empty))
+val 12 = mapreduce (fn x=>x*2) (fn (x,y,z)=>x+y+z) 0 t
+
+val totalLength = mapreduce String.size (fn (ll,l,lr)=>ll+l+lr) 0
+val t = Node(Node(Empty, "a", Empty), "ab", Node(Empty, "abc", Empty))
+val 6 = totalLength t
