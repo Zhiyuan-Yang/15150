@@ -1,8 +1,0 @@
-group is
-  $/basis.cm
-
-  ../sequence/sources.cm
-
-  matrix.sig
-  seqmatrix.sml
-  matrix.sml

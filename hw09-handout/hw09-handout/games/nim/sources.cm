@@ -1,7 +1,0 @@
-group is
-  $/basis.cm
-  ../../games/sources.cm
-  ../../players/sources.cm
-
-  nim.sml
-  run.sml
