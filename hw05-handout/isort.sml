@@ -59,7 +59,20 @@ fun Insert (x: int, empty: int tree): int tree = node(empty, x, empty)
 (****** End utility functions ******)
 
 
-fun ILsort _ = raise Fail "Unimplemented"
-fun Isort  _ = raise Fail "Unimplemented"
+(* sort the tree: first get element list, sort list, then insert element into the tree *)
+fun ILsort(t: int tree): int tree = 
+ foldl (fn (i, tt)=>Insert(i,tt)) empty (isort(inorder t))
+
+val [1,2,3] = inorder (ILsort(node(node(empty,3,empty),1,node(empty,2,empty))))
+
+
+  
+(* sort the tree without any list *)
+fun Isort2(empty: int tree, tt: int tree): int tree = tt
+  | Isort2(node(tl, x, tr), tt) = Insert(x, Isort2(tr, Isort2(tl, tt)))
+
+fun Isort(t: int tree): int tree = Isort2(t, empty)
+
+val [1,2,3] = inorder (Isort(node(node(empty,3,empty),1,node(empty,2,empty))))
 
 

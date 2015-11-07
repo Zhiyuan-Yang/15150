@@ -58,7 +58,45 @@ fun stack_toString ([]: stack): string = "#"
 
 (********************** End utility functions **********************)
 
-fun valid        _ = raise Fail "Unimplemented"
-fun flattenPTree _ = raise Fail "Unimplemented"
-fun pp           _ = raise Fail "Unimplemented"
-fun parsePar     _ = raise Fail "Unimplemented"
+(* whether l is a valid parentheses list *)
+fun valid(l: pList): bool =
+let 
+  fun f(RPAR: par, n: int): int= n-1
+    | f(LPAR, n) = if n<0 then n-1 else n+1
+in
+  (foldl f 0 l) = 0
+end
+
+val true = valid(pList_fromString("()"))
+val true = valid(pList_fromString("(())()(())"))
+val true = valid(pList_fromString("()()(())"))
+val false = valid(pList_fromString(")(())"))
+val false = valid(pList_fromString("(()()"))
+val false = valid(pList_fromString("(()))"))
+
+(* get corresponding pList of a pTree *)
+fun flattenPTree(empty: pTree): pList = []
+  | flattenPTree(nested(t)) = (LPAR::flattenPTree(t))@[RPAR]
+  | flattenPTree(sbs(t1,t2)) = (flattenPTree t1)@(flattenPTree t2)
+
+val "(()())" = pList_toString(flattenPTree(nested(sbs(nested(empty), nested(empty)))))
+
+fun pp2(i: pTree, []: stack): stack = [T(i)]
+  | pp2(i, T(t)::s) = pp2(sbs(t, i), s)
+  | pp2(i, OPEN::s) = T(i)::OPEN::s
+
+(* get corresponding pTree of a pList *)
+fun pp([]: pList, []: stack): pTree = empty
+  | pp([], T(t)::ss) = t
+  | pp(LPAR::l, s) = pp(l, OPEN::s)
+  | pp(RPAR::l, s) = 
+    case hd s of
+         OPEN=>pp(l, pp2(nested(empty), tl s))
+       | T(t)=>pp(l, T(nested(t))::(tl(tl s)))
+
+val nested(sbs(nested(empty), nested(empty))) = pp(pList_fromString("(()())"), [])
+
+(* get pTree of a string *)
+fun parsePar(ps: string): pTree = pp(pList_fromString(ps), [])
+
+val nested(sbs(nested(empty), nested(empty))) = parsePar("(()())")
